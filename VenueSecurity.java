@@ -58,4 +58,7 @@ public class VenueSecurity {
         // Test 2: Bad ticket (Triggers Exception & Logging)
         vs.processTicket("FAKE-123");
     }
+
 }
+
+// Updated logging logic to better track security
