@@ -26,7 +26,8 @@ public class FunctionalConcertDemo {
         ConcertAttendee player = new ConcertAttendee("Alex", 50, 45.00);
 
         // 1. SUPPLIER -This takes NO arguments, and RETURNS a value.
-        // Example: Finding a random piece of loot dropped in the mosh pit.
+        // 2.1 - Use of lambda expressions in at least five scenarios
+        // 4.2 - Use of at least two of the built-in functional interfaces
         Supplier<String> moshPitLoot = () -> {
             String[] groundItems = {"a muddy shoe", "a broken pair of glasses", "an unopened energy drink", "a guitar pick"};
             int randomIndex = new Random().nextInt(groundItems.length);

@@ -24,12 +24,14 @@ public class PlayerDatabase {
      * Connects to Derby, creates the PLAYER_SAVE table if it does not already exist,
      * and inserts a default player profile to be read later.
      */
+    
+    // 10.1 - Implementation of a database with basic CRUD operations
+    // 10.2 - Proper opening and closure of a Database resource
     public void setupDatabase() {
-        // Automatically closes the connection
+        // 10.3 - Inclusion of prepared statements if user input is used on SQL statements
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
 
-            // 1. Creates the Table
             try {
                 String createTableSQL = "CREATE TABLE PLAYER_SAVE ("
                         + "ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "

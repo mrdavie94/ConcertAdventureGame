@@ -6,6 +6,8 @@ package adventureGameAssignment;
  * * @author David Lane
  * @version 1.0
  */
+
+// 3.4 - Use of the Comparator or Comparable interface 
 public class Song implements Comparable<Song> {
     
     private String title;

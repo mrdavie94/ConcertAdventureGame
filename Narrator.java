@@ -4,10 +4,12 @@ package adventureGameAssignment;
  * Name: David Lane
  * Date: 03/05/2026
  * Assignment: Final Project - Concert Text Adventure 
- * Description: This is a singleton class all about the sarcastic internal monologue.
+ * Description: This is a singleton class all about the sarcastic internal monologue called the narrator.
  */
 public class Narrator {
 
+	// 1.5 - Proper use of the Static keyword
+	// 2.3 - Use of the Singleton pattern
 	// Single instance of the Narrator
 	private static Narrator instance;
 	

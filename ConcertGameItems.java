@@ -1,17 +1,13 @@
 package adventureGameAssignment;
 
-//1. ENUMERATION EXAMPLE 
-// Using an Enum is helpful for fixed items. 
+// 1.8 - Use of enumerations (enums)
 enum ItemType {
- CONSUMABLE, // Like coffee or energy drinks
- KEY_ITEM,   // Like the concert ticket
- EQUIPMENT   // Like earplugs or better shoes
+ CONSUMABLE, 
+ KEY_ITEM,   
+ EQUIPMENT  
 }
 
-//2. ABSTRACT METHOD EXAMPLE 
-// Abstract classes help with designing a template.
-// An example is every item I make has a name and also a use
-// A ticket has a much different use than coffee
+// 1.2 - Polymorphic class structure with use of parent classes and interfaces
 abstract class GameItem {
  String name;
  ItemType type;
@@ -26,15 +22,14 @@ abstract class GameItem {
 }
 
 //Class extending the abstract class
+//Item 1: Coffee
 class Coffee extends GameItem {
  
  public Coffee() {
-     super("Cold Brew", ItemType.CONSUMABLE);
+     super("Cold Brew Coffee", ItemType.CONSUMABLE);
  }
 
- // 3. @OVERRIDE EXAMPLE
- // Here I am overriding the abstract method from the parent. 
- // This makes it so I can provide a more specific way to use Coffee.
+ // 1.9 - Proper use of @Override notation
  @Override
  public void use() {
      System.out.println("You drank the " + name + ". Great choice! Feeling it yet?.");
@@ -50,6 +45,7 @@ class Backpack {
  static class Pocket {
      int capacity;
      
+     // 1.7 - Use of nested classes
      public Pocket(int capacity) {
          this.capacity = capacity;
      }
@@ -63,6 +59,7 @@ class Backpack {
 //5. ADDITIONAL EXAMPLE - (Another @Override)
 // Overriding toString() is pretty standard practice
 // it helps make printing objects readable for the game text.
+//Item 2: Concert Ticket
 class Ticket extends GameItem {
  public Ticket() {
      super("Concert Ticket", ItemType.KEY_ITEM);
@@ -73,10 +70,34 @@ class Ticket extends GameItem {
      System.out.println("You show the ticket to the bouncer.");
  }
 
- // Extra Override
+ // 1.4a - Including override of .toString() in at least one scenario
  @Override
  public String toString() {
      return "Item: " + name + " (Type: " + type + ")";
+ }
+}
+
+//Item 3: Earplugs
+class Earplugs extends GameItem {
+ public Earplugs() {
+     super("Foam Earplugs", ItemType.EQUIPMENT);
+ }
+
+ @Override
+ public void use() {
+     System.out.println("You squish the foam earplugs and put them in. The world sounds comfortably muffled. Protect your hearing!");
+ }
+}
+
+//Item 4: Guitar Pick
+class GuitarPick extends GameItem {
+ public GuitarPick() {
+     super("Lucky Guitar Pick", ItemType.KEY_ITEM);
+ }
+
+ @Override
+ public void use() {
+     System.out.println("You flick your lucky guitar pick. It doesn't do much right now, but it makes you feel cool.");
  }
 }
 

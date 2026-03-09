@@ -1,27 +1,32 @@
 package adventureGameAssignment;
 
-public class GameTime {
+/**
+ * Name: David
+ * Date: 03/08/2026
+ * Assignment: Final Project - Concert Text Adventure
+ * Description: An immutable object representing the concert's fixed schedule.
+ * // Chapter 2 - Design Patterns: Use of the Immutable Object pattern
+ */
+// RULE 1: The class must be 'final' so it cannot be extended by subclasses
+// 2.4 - Use of the Immutable Object pattern
+public final class GameTime {
     
-    // 1. The private static instance (The only one that will ever exist)
-    private static final GameTime instance = new GameTime();
-    
-    public String currentTime;
+    // RULE 2: All fields must be 'private' and 'final'
+    private final String concertStartTime;
+    private final String doorsOpenTime;
 
-    // 2. A Private constructor prevents anyone else from making a new clock
-    private GameTime() {
-        currentTime = "8:00 PM";
+    // RULE 3: Variables are set exactly once via the constructor
+    public GameTime(String concertStartTime, String doorsOpenTime) {
+        this.concertStartTime = concertStartTime;
+        this.doorsOpenTime = doorsOpenTime;
     }
 
-    // 3. This is a Public method to get the one single instance
-    public static GameTime getInstance() {
-        return instance;
+    // RULE 4: Only getters are provided. Absolutely no setter methods!
+    public String getConcertStartTime() {
+        return concertStartTime;
     }
 
-    /* * GENERAL COMMENTS:
-     * This uses the Singleton pattern here for the Game Clock.
-     * this is helpful because it avoids creating multiple 
-     * clock objects that might get out of sync.
-     * Since instance is static and final, it's loaded into memory only once,
-     * which makes it easier to access getInstance().
-     */
+    public String getDoorsOpenTime() {
+        return doorsOpenTime;
+    }
 }

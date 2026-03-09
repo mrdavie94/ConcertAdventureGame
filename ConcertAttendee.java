@@ -23,6 +23,12 @@ public class ConcertAttendee {
         this.energyLevel = energyLevel;
         this.cash = cash;
     }
+    
+ // 1.3 - Use of overloaded constructors
+    public ConcertAttendee(String name) {
+        // Automatically gives a default of 100 energy and 0 cash
+        this(name, 100, 0.0); 
+    }
 
     /**
      * Gets the name of the attendee.

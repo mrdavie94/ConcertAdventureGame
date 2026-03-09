@@ -12,7 +12,7 @@ abstract class Person {
     public abstract void performRole();
 }
 
-// This is an interface for the staff members
+// 4.3 - Creation and use of a custom functional interface
 interface RadioUser {
     void speakIntoRadio(String message);
 }

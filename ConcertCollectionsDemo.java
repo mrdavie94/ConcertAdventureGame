@@ -38,6 +38,7 @@ public class ConcertCollectionsDemo {
         
         // 1. TreeSet using Comparable (Natural Order -> Alphabetical)
         // A Set does not allow duplicates. A TreeSet sorts them automatically.
+        // 3.3 - Use of a TreeSet or TreeMap
         Set<Song> alphabeticalSetlist = new TreeSet<>();
         alphabeticalSetlist.add(new Song("Symphony of Destruction", 240));
         alphabeticalSetlist.add(new Song("Enter Sandman", 330));

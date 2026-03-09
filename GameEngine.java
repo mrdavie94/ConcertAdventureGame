@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+//Additional Req 2 - Appropriate use of JavaDoc comments
 /**
  * Name: David
  * Date: 03/05/2026
@@ -14,22 +15,34 @@ import java.util.Scanner;
 public class GameEngine {
 
     public static void main(String[] args) {
-        // Initialize tools for the game
+        
+    	// 8.1 - Demonstration of reading/writing data from the console
         Scanner scanner = new Scanner(System.in);
         Narrator brain = Narrator.getInstance();
-        Coffee coldBrew = new Coffee();
         ConcertPoster poster = new ConcertPoster();
-        
-        // --- THE RESTART LOOP ---
+        System.out.println("\n[SYSTEM BOOT]");
+        PlayerDatabase dbManager = new PlayerDatabase();
+        dbManager.setupDatabase(); 
+        GameTime schedule = new GameTime("9:00 PM", "7:30 PM");
+        System.out.println("[INFO]: Doors open at " + schedule.getDoorsOpenTime() + ". Show starts exactly at " + schedule.getConcertStartTime() + ".");
+        ConcertCalendar calendar = new ConcertCalendar();
+        calendar.calculateDaysUntilConcert();
+        TimeConsole.displayMessage(java.time.LocalTime.now(), java.util.Locale.getDefault());
+        System.out.println("---------------------------------\n");
+      
         boolean playAgain = true;
         
         while (playAgain) {
-            // Resets these variables every time a new game starts
+        	// 3.2 - Use of an Array List
         	List<GameItem> inventory = new ArrayList<>();
         	Ticket concertTicket = new Ticket(); 
+        	Earplugs earplugs = new Earplugs();
+            GuitarPick pick = new GuitarPick();
+            Coffee coldBrew = new Coffee();
             boolean alarmSet = false;
             boolean bumpedProducer = false;
             boolean isNextDay = false; 
+            boolean ticketShown = false;
             boolean isRunning = true;
             
             System.out.println("\n=================================");
@@ -48,26 +61,32 @@ public class GameEngine {
             bedroom.addCommand("save game");
             bedroom.addCommand("load game");
             bedroom.addCommand("delete save");
+            bedroom.addCommand("inventory");
 
             // 2. The Kitchen
             Room kitchen = new Room("Kitchen", "Your cold brew maker and your lovely Ninja Foodi take up most of the counter. Ziggy your black cat is meowing waiting for food, and of course staring at you judgmentally.");
             kitchen.addCommand("make pbj (Because you need fuel)");
             kitchen.addCommand("pet ziggy");
+            kitchen.addCommand("take coffee");
             kitchen.addCommand("go bedroom");
             kitchen.addCommand("go garage");
             kitchen.addCommand("go bus stop");
             kitchen.addCommand("save game");
             kitchen.addCommand("load game");
             kitchen.addCommand("delete save");
+            kitchen.addCommand("inventory");
             
             // 3. The Garage
             Room garage = new Room("Garage", "It smells like motor oil and unfulfilled potential. Your adjustable dumbbells and bench sit in the corner. An old electric guitar rests against a blown-out amp.");
             garage.addCommand("play guitar");
             garage.addCommand("lift weights");
+            garage.addCommand("take earplugs");
+            garage.addCommand("take pick");
             garage.addCommand("go kitchen");
             garage.addCommand("save game");
             garage.addCommand("load game");
             garage.addCommand("delete save");
+            garage.addCommand("inventory");
 
             // 4. The Bus Stop
             Room busStop = new Room("Bus Stop", "A rusty bench under a flickering streetlamp. The bus to the venue should be here soon.");
@@ -77,6 +96,7 @@ public class GameEngine {
             busStop.addCommand("save game");
             busStop.addCommand("load game");
             busStop.addCommand("delete save");
+            busStop.addCommand("inventory");
 
             // 5. The Concert Venue
             Room venue = new Room("Concert Venue", "The Metal Dome. It's loud, crowded, and smells like stale beer. A massive security guard blocks the entrance.");
@@ -85,6 +105,7 @@ public class GameEngine {
             venue.addCommand("save game");
             venue.addCommand("load game");
             venue.addCommand("delete save");
+            venue.addCommand("inventory");
 
             // Set the starting location and print the first description
             Room currentRoom = bedroom;
@@ -102,38 +123,103 @@ public class GameEngine {
 
                 switch (command) {
                 
-                // Used for my take ticket command. 
+                
                 case "take":
                     if (target.equals("ticket") && currentRoom == bedroom) {
                         if (!inventory.contains(concertTicket)) {
                             inventory.add(concertTicket);
-                            brain.speak("You grab the ticket and shove it in your pocket. Try not to wash your pants with it this time.");
+                            brain.speak("You grab the ticket and shove it in your pocket. Try not to wash it with your pants this time.");
                         } else {
-                            brain.speak("You already have the ticket. Your paranoia is showing.");
+                            brain.speak("You already have the ticket.");
+                        }
+                    } else if (target.equals("earplugs") && currentRoom == garage) {
+                        if (!inventory.contains(earplugs)) {
+                            inventory.add(earplugs);
+                            brain.speak("You grab the neon orange earplugs off the workbench.");
+                        } else {
+                            brain.speak("You already took the earplugs.");
+                        }
+                    } else if (target.equals("pick") && currentRoom == garage) {
+                        if (!inventory.contains(pick)) {
+                            inventory.add(pick);
+                            brain.speak("You pocket your lucky guitar pick. What did I name it again? The Pick of Destiny.");
+                        } else {
+                            brain.speak("You already have the pick.");
+                        }
+                    } else if (target.equals("coffee") && currentRoom == kitchen) {
+                        if (!inventory.contains(coldBrew)) {
+                            inventory.add(coldBrew);
+                            brain.speak("You pour some aggressively strong cold brew into a travel mug. Liquid anxiety secured.");
+                        } else {
+                            brain.speak("You already grabbed the coffee. Your heart can only take so much.");
                         }
                     } else {
                         brain.speak("You can't take that.");
                     }
                     break;
+                
+                case "inventory":
+                case "i":
+                    brain.speak("Taking stock of your worldly possessions, are we?");
+                    // Calls the Generic Wildcard method at the bottom of the class
+                    displayInventory(inventory);
+                    break;
+                	
 
                 case "show":
                     if (target.equals("ticket") && currentRoom == venue) {
-                        if (inventory.contains(concertTicket)) {
-                            // Uses the override method
-                            concertTicket.use(); 
-                            brain.speak("The massive security guard grunts, scans it, and steps aside. You're in.");
+                        
+                    	// 4.1 - Use of a variable in lambda expression (uses 'target' from outer scope)
+                    	// 4.4 - Use of the optional type
+                    	// 4.5 - Use of the stream pipeline
+                        java.util.Optional<GameItem> foundTicket = inventory.stream()
+                                .filter(item -> item instanceof Ticket)
+                                .findFirst();
+
+                        if (foundTicket.isPresent()) {
+                            // Uses overridden toString() and use() methods
+                            foundTicket.get().use(); 
+                            
+                            // Triggering VenueSecurity Exception Handling
+                            VenueSecurity bouncer = new VenueSecurity();
+                            bouncer.processTicket("VALID-999"); 
+                            
+                            // Uses custom functional interface (RadioUser)
+                            RadioUser bouncerRadio = message -> System.out.println("[RADIO STATIC]: " + message);
+                            bouncerRadio.speakIntoRadio("Gate clear. Let 'em in.");
+                            
+                            ticketShown = true; 
+                            
                         } else {
-                            brain.speak("You pat your pockets. Empty. You stare at the bouncer. The bouncer stares at you. You left the ticket in your bedroom, didn't you? GAME OVER.");
+                            brain.speak("You pat your pockets. Empty. You left the ticket in your bedroom. GAME OVER.");
                             isRunning = false;
                         }
                     } else {
-                        brain.speak("Who are you showing that to? The voices in your head?");
+                        brain.speak("Who are you showing that to?");
                     }
                     break;
                     
+               
+                case "use":
+                case "drink": // Typing "drink coffee" does the exact same thing as "use coffee"
+                    boolean itemFound = false;
+                    for (GameItem item : inventory) {
+                        if (item.name.toLowerCase().contains(target)) {
+                            item.use(); // Calls the specific override method!
+                            itemFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!itemFound) {
+                        brain.speak("You don't have anything like that to use.");
+                    }
+                    break;
+                    
+                  
                 case "enter":
                     if ((target.equals("mosh") || target.equals("pit")) && currentRoom == venue) {
-                        if (inventory.contains(concertTicket)) {
+                        if (ticketShown) {
                             // Check which ending they earned based on the bus stop!
                             if (bumpedProducer) {
                                 // Option B: The Secret Ending
@@ -144,6 +230,23 @@ public class GameEngine {
                                 System.out.println("\n*** TRUE ENDING ***");
                                 brain.speak("You push through the doors, ready for a stadium-filling metal experience. ...There are exactly 10 people here. One of them is the janitor. The band is playing on a stage the size of a ping-pong table. But you know what? You don't care. In your head, the pyrotechnics are blinding. You throw up the metal horns and have the absolute best night of your life. YOU WIN.");
                             }
+                         // --- INTEGRATING CONCERTATTENDEE & LAMBDAS ---
+                            ConcertAttendee player = new ConcertAttendee("David", 100, 50.00);
+                            java.util.function.UnaryOperator<Integer> moshPitFatigue = (energy) -> energy / 2;
+                            player.setEnergyLevel(moshPitFatigue.apply(player.getEnergyLevel()));
+                            brain.speak("You survived the pit! But your energy is slashed to " + player.getEnergyLevel() + ".");
+
+                            // --- INTEGRATING THE DEMO CLASSES (Song, Comparators, Sets, Maps) ---
+                            System.out.println("\n=================================");
+                            System.out.println("=== POST-SHOW RECAP & MERCH ===");
+                            System.out.println("=================================");
+                            
+                            // This calls the Collections demo (triggering Song.java and SongDurationComparator.java)
+                            ConcertCollectionsDemo.main(new String[0]);
+                            
+                            System.out.println("\n--- NIGHT HIGHLIGHTS ---");
+                            // This calls the Functional demo
+                            FunctionalConcertDemo.main(new String[0]);
                             isRunning = false; // Ends the game victoriously!
                         } else {
                             brain.speak("You need to get past the bouncer first. Try showing your ticket.");
@@ -159,7 +262,7 @@ public class GameEngine {
 
                 case "check":
                     if (target.equals("pencil") && currentRoom == bedroom) {
-                        brain.speak("Are you really questioning if the pencil is heavy? It's a yellow stick of graphite. It weighs exactly as much as disappointment.");
+                        brain.speak("Wow! It's a yellow stick of graphite. Could pretend it's a drumstick I suppose.");
                     } else {
                         brain.speak("There's nothing to check like that here.");
                     }
@@ -175,28 +278,28 @@ public class GameEngine {
                     break;
 
                 case "sleep":
-                    // Chapter 6 - Exceptions: Use of assertions
+                    
+                	// 6.5 - Use of assertions
                     // This is a safety check to so this code only runs in the bedroom
                     assert currentRoom == bedroom : "Player tried to sleep outside the bedroom!";
 
                     if (currentRoom == bedroom && !isNextDay) {
-                        // Chapter 6 - Exceptions: Proper use of Try-Catch blocks
+                        // 6.1 - Proper use of Try-Catch blocks
                         try {
                             if (!alarmSet) {
-                                // Triggering the custom exception!
+                                // 6.3 - Use and creation of a custom exception
                                 throw new MissedBusException("You didn't set your alarm!");
                             } else {
                                 isNextDay = true;
-                                brain.speak("You finally crash... BEEP BEEP BEEP! You wake up. You feel surprisingly okay.");
+                                brain.speak("You finally crash... BEEP BEEP BEEP! You wake up. You feel surprisingly okay for once.");
                                 bedroom.setDescription("Morning light fills the room. It's concert day.");
                             }
                         } catch (MissedBusException e) {
-                            // Catching the exception and triggering the Game Over
+                            // 6.2 - Use of catch clause
                             brain.speak(e.getMessage() + " You wake up to the sun setting. It's 7:00 PM. You missed the bus. You missed the concert. Your life is a tragedy. GAME OVER.");
                             isRunning = false; 
                         } finally {
-                            // Chapter 6 - Exceptions: Use of finally clause
-                            // This runs no matter if you wake up on time or miss the bus
+                            // 6.2 - Use of finally clause
                             System.out.println("\n[SYSTEM]: Wakey wakey. Another day is here!");
                         }
                     } else if (isNextDay) {
@@ -222,7 +325,7 @@ public class GameEngine {
                         } else if (currentRoom == bedroom || currentRoom == garage || currentRoom == busStop) {
                             currentRoom = kitchen;
                             
-                            // --- ROOM DESCRIPTIONS ---
+                            // Descriptions of rooms
                             System.out.println("\n[" + currentRoom.getName().toUpperCase() + "]: " + currentRoom.getDescription());
                             brain.speak("You walk into the kitchen. The hum of the refrigerator greets you. Is it peanut butter jelly time?");
                             currentRoom.showOptions();
@@ -317,16 +420,7 @@ public class GameEngine {
                         brain.speak("Look at what? The crushing void of your responsibilities? Try checking your options.");
                     }
                     break;
-                
-                case "drink":
-                    if ((target.equals("coffee") || target.equals("brew")) && (currentRoom == bedroom || currentRoom == kitchen)) {
-                        coldBrew.use();
-                        brain.speak("Caffeine acquired. Your heart rate is now a blast beat.");
-                    } else {
-                        brain.speak("You can't drink that. Or maybe you can, but I wouldn't recommend it.");
-                    }
-                    break;
-                    
+                     
                 case "save":
                     // Package the current variables into our Serializable object
                     SaveState currentState = new SaveState(alarmSet, bumpedProducer, isNextDay, currentRoom.getName());
@@ -399,5 +493,22 @@ public class GameEngine {
         } // End of outer 'playAgain' loop
         
         scanner.close(); // Only close the scanner when they are completely done
+    }
+    
+    /**
+     * CH 3 - Generics: Use of an Upper-bounded wildcard.
+     * Prints any list of GameItems (or its children like Ticket, Coffee).
+     */
+    // 3.1.a - Use of an Upper-bounded wildcard when using the generic class
+    public static void displayInventory(List<? extends GameItem> items) {
+        System.out.println("\n--- POCKET CONTENTS ---");
+        if (items.isEmpty()) {
+            System.out.println("Your pockets are empty.");
+        } else {
+            for (GameItem item : items) {
+                System.out.println("- " + item.name); // Accesses the name from the abstract class
+            }
+        }
+        System.out.println("-----------------------");
     }
 }

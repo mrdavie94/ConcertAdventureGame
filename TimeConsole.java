@@ -45,6 +45,7 @@ public class TimeConsole {
     public static void displayMessage(LocalTime time, Locale locale) {
         // Loads the properties file based on the locale
         // It looks for GameMessages first, then appends _es if needed.
+    	// 5.3.a - Use of a resource bundle
         ResourceBundle messages = ResourceBundle.getBundle("GameMessages", locale);
         
         String key = getTimeKey(time);
