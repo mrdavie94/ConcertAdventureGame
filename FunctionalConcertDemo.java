@@ -23,7 +23,7 @@ public class FunctionalConcertDemo {
     public static void main(String[] args) {
         
         System.out.println("--- WELCOME TO THE CONCERT ---");
-        ConcertAttendee player = new ConcertAttendee("Alex", 50, 45.00);
+        ConcertAttendee player = new ConcertAttendee("David", 100, 100.00);
 
         // 1. SUPPLIER -This takes NO arguments, and RETURNS a value.
         // 2.1 - Use of lambda expressions in at least five scenarios
@@ -57,7 +57,7 @@ public class FunctionalConcertDemo {
         // Example: Converts the player's energy level to a string.
         Function<Integer, String> getEnergyStatus = (energy) -> {
             if (energy > 80) return "Buzzing/Hyper";
-            if (energy > 30) return "Rocking out normally";
+            if (energy > 50) return "Rocking out normally";
             return "Crashing hard, needs sleep";
         };
         System.out.println("\n[FUNCTION]: Player's current status is: '" + getEnergyStatus.apply(player.getEnergyLevel()) + "'.");

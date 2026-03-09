@@ -13,7 +13,7 @@ import java.time.temporal.ChronoUnit;
  */
 
 // 5.1 - Use of dates and times
-// 5.2 - Implementation of a custom calender 
+// 5.2 - Implementation of a custom calendar 
 public class ConcertCalendar {
 
     private LocalDate currentDate;

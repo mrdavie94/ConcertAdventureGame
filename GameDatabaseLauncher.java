@@ -16,14 +16,14 @@ public class GameDatabaseLauncher {
     public static void main(String[] args) {
         System.out.println("--- Booting Concert Adventure Game ---");
 
-        // 1. Initialize our Database Manager
+        // 1. Initialize the Database Manager
         PlayerDatabase dbManager = new PlayerDatabase();
         
         // 2. Setup the DB and load the default data
         dbManager.setupDatabase();
 
         // 3. Read the value from the database
-        String myName = "Alex";
+        String myName = "David";
         boolean databaseVipStatus = dbManager.checkVipStatus(myName);
         
         System.out.println("Fetched VIP Status for " + myName + " from Database: " + databaseVipStatus);

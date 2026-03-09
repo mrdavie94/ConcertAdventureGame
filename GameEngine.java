@@ -220,7 +220,7 @@ public class GameEngine {
                 case "enter":
                     if ((target.equals("mosh") || target.equals("pit")) && currentRoom == venue) {
                         if (ticketShown) {
-                            // Check which ending they earned based on the bus stop!
+                            // Checks which ending is earned based on the bus stop!
                             if (bumpedProducer) {
                                 // Option B: The Secret Ending
                                 System.out.println("\n*** SECRET ENDING UNLOCKED ***");
@@ -230,13 +230,13 @@ public class GameEngine {
                                 System.out.println("\n*** TRUE ENDING ***");
                                 brain.speak("You push through the doors, ready for a stadium-filling metal experience. ...There are exactly 10 people here. One of them is the janitor. The band is playing on a stage the size of a ping-pong table. But you know what? You don't care. In your head, the pyrotechnics are blinding. You throw up the metal horns and have the absolute best night of your life. YOU WIN.");
                             }
-                         // --- INTEGRATING CONCERTATTENDEE & LAMBDAS ---
+            
                             ConcertAttendee player = new ConcertAttendee("David", 100, 50.00);
                             java.util.function.UnaryOperator<Integer> moshPitFatigue = (energy) -> energy / 2;
                             player.setEnergyLevel(moshPitFatigue.apply(player.getEnergyLevel()));
                             brain.speak("You survived the pit! But your energy is slashed to " + player.getEnergyLevel() + ".");
 
-                            // --- INTEGRATING THE DEMO CLASSES (Song, Comparators, Sets, Maps) ---
+                           
                             System.out.println("\n=================================");
                             System.out.println("=== POST-SHOW RECAP & MERCH ===");
                             System.out.println("=================================");
@@ -481,7 +481,7 @@ public class GameEngine {
                 }
             } // End of inner 'isRunning' loop
             
-            // --- FIX 2: THE RESTART PROMPT ---
+            // Prompt to restart the game
             System.out.print("\nWould you like to play again? (yes/no) > ");
             String restartInput = scanner.nextLine().trim().toLowerCase();
             
